@@ -1,0 +1,203 @@
+/* ===== mobile.css — camada móvel (Capacitor/WebView). Só atua em ponteiro grosso ou telas estreitas; desktop intacto. ===== */
+:root{--mob-tab:0px;--mob-sat:env(safe-area-inset-top,0px);--mob-sab:env(safe-area-inset-bottom,0px);--mob-sal:env(safe-area-inset-left,0px);--mob-sar:env(safe-area-inset-right,0px);}
+#mobDock{display:none;}
+
+@media (pointer:coarse),(max-width:1050px){
+  /* --- rolagem: sem pull-to-refresh/bounce, sem realce de toque, sem seleção/zoom por duplo toque --- */
+  html,body{overscroll-behavior:none;}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  body{-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    padding-top:var(--mob-sat);padding-left:var(--mob-sal);padding-right:var(--mob-sar);}
+  .btn,button,.menu-item,.vp-tool-btn,[role=tab],[role=button]{touch-action:manipulation;-webkit-touch-callout:none;}
+  .btn,.menu-item,.titlebar,.panel-title,.vp-tools,#a10Tabs{-webkit-user-select:none;user-select:none;}
+  .viewport,.viewport *{touch-action:none;}            /* gestos (arrastar/pinça) tratados em JS/pointer events */
+  .viewport .vp-tools,.viewport .vp-tools *,.viewport .vp-select,.viewport select,.viewport .zoom-badge{touch-action:manipulation;}
+  .viewport .vp-tools{max-width:100%;overflow-x:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+  /* font-size >= 16px evita zoom automático do iOS ao focar */
+  input,select,textarea,.field-box input,.cbox input{font-size:16px !important;}
+  #ilab input,#ilab select,#ilab textarea,#stuRoot input,#stuRoot select,#stuRoot textarea,#premWrap input,#premWrap select{font-size:16px !important;min-height:44px;}
+  #ilab input[type=range],#stuRoot input[type=range]{min-height:32px;}
+  #ilab input[type=checkbox],#stuRoot input[type=checkbox],#ilab input[type=radio],#stuRoot input[type=radio]{min-height:0;width:22px;height:22px;}
+}
+
+/* ---- barra inferior de abas: respeita lateral ---- */
+@media (max-width:820px){
+  :root{--mob-tab:calc(56px + env(safe-area-inset-bottom,0px));--mob-stat:26px;}
+  #a10Tabs{padding-left:var(--mob-sal);padding-right:var(--mob-sar);}
+  .titlebar{margin-top:6px;}
+  #fxStatus{padding-left:var(--mob-sal);}
+}
+/* paisagem de celular (largura > 820, altura baixa): trilho lateral de abas no lugar da barra inferior */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:520px){
+  :root{--mob-rail:calc(64px + env(safe-area-inset-left,0px));--mob-tab:0px;--mob-stat:calc(24px + env(safe-area-inset-bottom,0px));}
+  body{padding-left:calc(var(--mob-rail) + 4px);}
+  .app{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));}
+  #a10Tabs{display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;right:auto;height:auto;width:var(--mob-rail);z-index:80;background:#071322;border-right:1px solid rgba(63,233,255,.45);padding:var(--mob-sat) 0 var(--mob-sab) var(--mob-sal);box-sizing:border-box;}
+  #a10Tabs button{flex:1 1 0;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:0;color:#a9c4de;font:600 10.5px var(--sans);cursor:pointer;padding:2px;}
+  #a10Tabs button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  #a10Tabs button[aria-selected="true"]{color:#3fe0d0;box-shadow:inset 3px 0 0 #3fe0d0;background:rgba(63,224,208,.08);}
+  #fxStatus{left:calc(var(--mob-rail)) !important;bottom:0 !important;height:24px;}
+  .workspace{grid-template-columns:minmax(0,1fr) !important;}
+  .workspace > *{grid-column:1 !important;grid-row:auto !important;}
+  body[data-a10-tab="img"] .workspace > .side-panel,body[data-a10-tab="img"] #evaluationPanel,
+  body[data-a10-tab="par"] .workspace > .side-panel,body[data-a10-tab="par"] #evaluationPanel,
+  body[data-a10-tab="pro"] .workspace > .a10-mid,body[data-a10-tab="pro"] #evaluationPanel,
+  body[data-a10-tab="ava"] .workspace,
+  body[data-a10-tab="img"] footer,body[data-a10-tab="par"] footer,body[data-a10-tab="pro"] footer{display:none !important;}
+  body[data-a10-tab="img"] .a10-mid > .a10-par:not(.a10-img),
+  body[data-a10-tab="par"] .a10-mid > .a10-img:not(.a10-par){display:none !important;}
+  body[data-a10-tab="par"] .a10-mid > .vp-toolbar{display:none !important;}
+  #evaluationPanel{margin-top:0 !important;}
+  .titlebar{padding:4px 8px;margin-bottom:4px;}
+  .titlebar .tb-logo{height:26px;}
+  .titlebar .tb-left{display:none;}
+  .patient-chip{padding:2px 8px;font-size:10.5px;}
+  .viewports.a10-single .viewport{max-width:max(240px,calc((100vh - 190px) * 1.3333));}
+  .status-toast{bottom:36px !important;}
+  #mobDock{bottom:34px;}
+  body.mob-dock-open #premBadge{bottom:calc(34px + 60px) !important;}
+  body.mob-dock-open #stuBtn{bottom:calc(34px + 120px) !important;}
+  body.mob-dock-open #ilabBtn{bottom:calc(34px + 180px) !important;}
+  body #a11Help{left:auto !important;right:calc(12px + var(--mob-sar) + 58px) !important;bottom:34px !important;}
+  body[data-a10-tab="img"] .a10-mid > .panel-title,body[data-a10-tab="img"] .a10-mid > .legend,body[data-a10-tab="img"] .a10-mid > .section-gap{display:none !important;}
+  body[data-a10-tab="img"] .titlebar{display:none;}
+  body[data-a10-tab="img"] .a10-mid{display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;}
+  body[data-a10-tab="img"] .a10-mid > *{flex:0 0 100%;min-width:0;}
+  body[data-a10-tab="img"] .a10-mid > .vp-toolbar{flex:0 0 auto;margin:0;}
+  body[data-a10-tab="img"] .a10-mid > #a10Planes{flex:1 1 300px;margin:0;}
+  .viewports.a10-single .viewport{max-width:max(240px,calc((100vh - 140px) * 1.3333));}
+  body #a11Nudge{bottom:calc(var(--mob-stat) + 8px) !important;flex-wrap:nowrap;width:max-content;left:calc(50% + var(--mob-rail) / 2) !important;max-width:calc(100vw - var(--mob-rail) - 16px - var(--mob-sar));}
+  #stuRoot header .mut{display:none;}
+  #stuRoot header{flex-wrap:nowrap;}
+  #ilab header span{display:none;}
+}
+
+/* ---- botões flutuantes -> 1 FAB (speed-dial) para não cobrir a imagem ---- */
+@media (pointer:coarse),(max-width:1050px){
+  #mobDock{display:block;position:fixed;z-index:2147483250;right:calc(12px + var(--mob-sar));bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 10px);}
+  #mobDock button{width:48px;height:48px;border-radius:50%;border:2px solid #3fe0d0;background:rgba(7,19,34,.94);color:#e6f8ff;font:700 22px/1 system-ui;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.55);padding:0;cursor:pointer;opacity:.92;}
+  body.mob-dock-open #mobDock button{background:#0f3a63;opacity:1;}
+  #stuBtn,#ilabBtn,#premBadge{display:none !important;}
+  body.mob-dock-open #stuBtn,body.mob-dock-open #ilabBtn,body.mob-dock-open #premBadge{display:block !important;position:fixed !important;left:auto !important;top:auto !important;right:calc(12px + var(--mob-sar)) !important;min-height:48px;padding:10px 16px !important;font-size:15px !important;border-radius:24px !important;max-width:calc(100vw - 24px - var(--mob-sal) - var(--mob-sar));white-space:nowrap;z-index:2147483250 !important;}
+  body.mob-dock-open #premBadge{bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 10px + 60px) !important;}
+  body.mob-dock-open #stuBtn{bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 10px + 120px) !important;}
+  body.mob-dock-open #ilabBtn{bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 10px + 180px) !important;}
+  /* quando o Lab/Estúdio/paywall estão abertos, o dock some */
+  body.mob-modal #mobDock,body.mob-modal #stuBtn,body.mob-modal #ilabBtn,body.mob-modal #premBadge{display:none !important;}
+  /* "?" de acessibilidade e checklist: lado esquerdo, acima da barra */
+  #a11Help{right:auto !important;left:calc(12px + var(--mob-sal)) !important;bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 10px) !important;}
+  #a11Chk{left:calc(8px + var(--mob-sal)) !important;bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 66px) !important;}
+}
+
+/* ---- modais em tela cheia ---- */
+@media (pointer:coarse),(max-width:820px){
+  #ilab{inset:0 !important;border-radius:0 !important;border:0 !important;
+    padding:var(--mob-sat) var(--mob-sar) var(--mob-sab) var(--mob-sal);}
+  #ilab.on{display:block !important;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+  #ilab header{flex-wrap:wrap;gap:8px;}
+  #ilab button{min-height:44px;min-width:44px;font-size:14px !important;}
+  #ilab .fam button{min-height:40px;padding:4px 10px;}
+  #ilab .body{display:flex !important;flex-direction:column;gap:10px;overflow:visible !important;flex:none;}
+  #ilab .col{overflow:visible;flex:none;}
+  /* imagens (Original/k-space/Resultado) fixas no topo enquanto se escolhe efeito/parâmetros */
+  #ilab .body > .col:nth-child(2){display:contents;}
+  #ilab .body > .col:nth-child(2) > .views:first-child{order:-3;position:sticky;top:0;z-index:3;background:#071b33;padding:4px 0;margin:0;box-shadow:0 6px 10px rgba(0,0,0,.5);}
+  #ilab .body > .col:nth-child(2) > .views:first-child .cap{font-size:10px;}
+  #ilab .body > .col:nth-child(2) > *{flex:none;min-width:0;}
+  #ilab .body > .col:nth-child(1){max-height:38vh;overflow-y:auto !important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-bottom:1px solid #12486e;}
+  #ilab .views{grid-template-columns:repeat(3,minmax(0,1fr));}
+  #ilab .chip{padding:8px 12px;font-size:13px;}
+  #ilab select{max-width:100%;}
+  #ilab canvas{touch-action:pan-y;}
+
+  #stuRoot{padding:0;}
+  #stuRoot .box{inset:0 !important;border-radius:0 !important;border:0 !important;
+    padding:var(--mob-sat) var(--mob-sar) var(--mob-sab) var(--mob-sal);}
+  #stuRoot header,#stuRoot footer{flex-wrap:wrap;}
+  #stuRoot .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;}
+  #stuRoot .tabs button{flex:none;min-height:44px;font-size:13px;padding:6px 14px;}
+  #stuRoot button.act,#stuRoot .btn,#stuRoot button{min-height:44px;min-width:44px;font-size:13px;}
+  #stuRoot .body{overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+  #stuRoot .row{gap:8px;}
+  #stuRoot canvas{max-width:100%;height:auto;}
+  #stuRoot table{display:block;overflow-x:auto;}
+  #stuClose{min-width:44px;}
+
+  #premWrap{padding:var(--mob-sat) var(--mob-sar) var(--mob-sab) var(--mob-sal) !important;align-items:stretch !important;overflow:auto;overscroll-behavior:contain;background:#0a1220 !important;}
+  #premBox{max-width:none !important;width:100% !important;max-height:none !important;min-height:100%;border-radius:0 !important;border:0 !important;box-sizing:border-box;padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px)) !important;}
+  #premBox button{min-height:48px;}
+  #premBox a{display:inline-flex;align-items:center;min-height:44px;padding:0 8px;}
+  #premBox [id*=Close],#premBox .no,#premBox [data-close]{min-height:44px;}
+}
+
+/* convite do tour guiado: faixa compacta, não cobre o centro da imagem */
+@media (pointer:coarse),(max-width:820px){
+  #a11Nudge{bottom:calc(var(--mob-tab) + var(--mob-stat,0px) + 66px);animation:mobNudgeAway .3s ease 12s forwards;max-width:calc(100vw - 16px);padding:6px 10px;gap:6px;font-size:12.5px;}
+  #a11Nudge .a11-btn{min-height:44px;padding:4px 12px;}
+}
+/* modais genéricos do app respeitam safe-area */
+@media (pointer:coarse),(max-width:820px){
+  #onboardingModal{padding:var(--mob-sat) var(--mob-sar) var(--mob-sab) var(--mob-sal);overflow:auto;box-sizing:border-box;}
+  #onboardingModal > div{max-height:100%;overflow:auto;margin:auto;}
+  #onboardingModal .btn{min-height:44px;}
+  .status-toast{bottom:calc(var(--mob-tab) + 40px) !important;}
+}
+
+@keyframes mobNudgeAway{to{opacity:0;visibility:hidden;pointer-events:none;}}
+/* ---- v2: correções da auditoria de layout (retrato/paisagem, 320–430px) ---- */
+@media (pointer:coarse),(max-width:820px){
+  /* Estúdio: cabeçalho compacto (título + Fechar numa linha), abas rolam, grades de 2 colunas empilham */
+  #stuRoot header .mut{display:none;}
+  #stuRoot header{flex-wrap:nowrap;padding:6px 10px;}
+  #stuRoot header b{flex:1 1 auto;min-width:0;font-size:13px;line-height:1.2;}
+  #stuRoot .tabs{scrollbar-width:none;}
+  #stuRoot .tabs::-webkit-scrollbar{display:none;}
+  #stuRoot .body{overflow-x:hidden;overflow-y:auto;padding:10px;}
+  #stuRoot .body [style*="grid-template-columns"]:not([style*="auto-fit"]):not([style*="auto-fill"]){grid-template-columns:minmax(0,1fr) !important;}
+  #stuRoot .body input[type=range]{max-width:100%;}
+  #stuRoot .body input:not([type=checkbox]):not([type=radio]):not([type=range]),#stuRoot .body select{max-width:100%;box-sizing:border-box;}
+  #stuRoot label:has(> input[type=checkbox]),#stuRoot label:has(> input[type=radio]){min-height:44px;padding:0 4px;}
+  #stuRoot .row > label,#stuRoot .row > button{max-width:100%;}
+  /* Lab: chips de família com alvo de 44px */
+  #ilab .fam button,#ilab .chip{min-height:44px;}
+}
+
+@media (pointer:coarse),(max-width:1050px){
+  /* grade de parâmetros: colunas nunca passam da largura (min-width:0) */
+  .param-groups{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));}
+  .param-groups > *,.a10-mid,.a10-mid > *,.workspace > *{min-width:0;}
+  .pgroup .field-row{flex-wrap:wrap;}
+  .pgroup input,.pgroup select{max-width:100%;min-width:0;}
+  /* barra de ferramentas do viewport: alvos de 44px, rola na horizontal */
+  .viewport .vp-tools .vp-tool-btn{flex:0 0 44px;min-width:44px;}
+}
+@media (pointer:coarse),(max-width:820px){
+  #ilab .body,#ilab .col,#ilab .views > *{min-width:0;max-width:100%;box-sizing:border-box;}
+  #ilab .body{overflow-x:hidden !important;}
+  #ilab div,#ilab .credit{overflow-wrap:anywhere;}
+  #stuRoot .body :is(.card,.row,div,canvas,img,pre):not(table *){max-width:100%;box-sizing:border-box;}
+  #stuRoot input[type=checkbox],#stuRoot input[type=radio]{flex:none;min-width:22px;min-height:22px;}
+  #stuRoot input[type=range]{min-width:0;}
+}
+@media (pointer:coarse),(max-width:820px){
+  #stuRoot .body label{max-width:100%;flex-wrap:wrap;}
+  #stuRoot .body label > input:not([type=checkbox]):not([type=radio]):not([type=file]){min-width:0;flex:1 1 140px;width:auto !important;}
+  #stuRoot .body .row > input:not([type=checkbox]):not([type=radio]){min-width:0;max-width:100%;}
+  #stuRoot .body .row{min-width:0;}
+}
+/* paisagem de celular: barra de status estreita mostra só o essencial */
+@media (pointer:coarse) and (orientation:landscape) and (max-height:520px) and (max-width:760px){
+  #fxStatus .fxg-hide-sm{display:none !important;}
+}
+@media (pointer:coarse),(max-width:820px){
+  #stuRoot .body canvas{max-width:100% !important;height:auto !important;}
+}
+@media (pointer:coarse),(max-width:820px){
+  #stuRoot .body [style*="min-width"]{min-width:0 !important;max-width:100%;}
+  #stuRoot .body [style*="width:"]:not(canvas):not(input[type=checkbox]){max-width:100%;}
+}
+/* sem zoom de página por pinça (app); os viewports tratam a pinça por conta própria */
+@media (pointer:coarse){ html,body{touch-action:pan-x pan-y;} }
+@media (pointer:coarse) and (orientation:landscape) and (max-height:520px){
+  body #a11Nudge{left:calc(var(--mob-rail) + 8px) !important;transform:none !important;width:auto;max-width:calc(100vw - var(--mob-rail) - 96px - var(--mob-sar));flex-wrap:wrap;}
+}
