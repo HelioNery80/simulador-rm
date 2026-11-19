@@ -1,5 +1,5 @@
 /* Service worker do Simulador RM (web): cache-first para uso offline. Troque VERSION ao publicar mudanças. */
-var VERSION='srm-web-e686bee9';
+var VERSION='srm-web-80897acf';
 var FILES=['./','./index.html','./app-config.js','./app-native.js','./premium.js','./mobile.css','./mobile.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',function(e){ e.waitUntil(caches.open(VERSION).then(function(c){ return c.addAll(FILES); }).then(function(){ return self.skipWaiting(); })); });
 self.addEventListener('activate',function(e){ e.waitUntil(caches.keys().then(function(k){ return Promise.all(k.filter(function(n){ return n!==VERSION; }).map(function(n){ return caches.delete(n); })); }).then(function(){ return self.clients.claim(); })); });

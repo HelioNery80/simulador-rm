@@ -18,9 +18,9 @@ function ready(fn){ if(document.readyState!=='loading') fn(); else document.addE
 
 ready(function(){
   var B = document.body;
-  /* 2) dock: um botão único que abre Lab / Estúdio / Premium */
+  /* 2) dock: um botão único que abre Lab / Estúdio */
   var dock = document.createElement('div'); dock.id='mobDock';
-  var tg = document.createElement('button'); tg.type='button'; tg.textContent='⋯'; tg.setAttribute('aria-label','Mais ferramentas: Lab, Estúdio, Premium'); tg.setAttribute('aria-expanded','false');
+  var tg = document.createElement('button'); tg.type='button'; tg.textContent='⋯'; tg.setAttribute('aria-label','Mais ferramentas: Lab, Estúdio'); tg.setAttribute('aria-expanded','false');
   dock.appendChild(tg); B.appendChild(dock);
   function setOpen(o){ B.classList.toggle('mob-dock-open',!!o); tg.textContent=o?'✕':'⋯'; tg.setAttribute('aria-expanded',o?'true':'false'); }
   tg.addEventListener('click',function(e){ e.stopPropagation(); setOpen(!B.classList.contains('mob-dock-open')); });
@@ -30,10 +30,10 @@ ready(function(){
     setOpen(false);                                  /* toque fora ou em um dos botões fecha o dock */
   },true);
 
-  /* 3) classe mob-modal enquanto Lab/Estúdio/paywall estiverem abertos (esconde o dock; trava rolagem do fundo) */
+  /* 3) classe mob-modal enquanto Lab/Estúdio estiverem abertos (esconde o dock; trava rolagem do fundo) */
   function visible(el){ if(!el) return false; var s=getComputedStyle(el); return s.display!=='none' && s.visibility!=='hidden'; }
   function sync(){
-    var open = visible(document.getElementById('ilab')) || visible(document.getElementById('stuRoot')) || visible(document.getElementById('premWrap')) || visible(document.getElementById('onboardingModal'));
+    var open = visible(document.getElementById('ilab')) || visible(document.getElementById('stuRoot')) || visible(document.getElementById('onboardingModal'));
     if(B.classList.contains('mob-modal')!==open){ B.classList.toggle('mob-modal',open); document.documentElement.style.overflow = (open&&isMob())?'hidden':''; if(open) setOpen(false); }
   }
   var raf=0; function sched(){ if(!raf) raf=requestAnimationFrame(function(){ raf=0; sync(); }); }
